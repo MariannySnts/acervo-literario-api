@@ -1,5 +1,5 @@
 
-package br.com.treinarecife.controller;
+package br.com.treinarecife.acervo.literario.api.controller;
 
 import java.util.List;
 
@@ -7,10 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import br.com.treinarecife.DTO.AutorRequestDTO;
-import br.com.treinarecife.DTO.AutorResponseDTO;
+import br.com.treinarecife.acervo.literario.api.dto.AutorRequestDTO;
+import br.com.treinarecife.acervo.literario.api.dto.AutorResponseDTO;
 import br.com.treinarecife.acervo.literario.api.entity.Autor;
-import br.com.treinarecife.service.AutorService;
+import br.com.treinarecife.acervo.literario.api.service.AutorService;
 
 @RestController
 @RequestMapping("/autores")

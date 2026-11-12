@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import br.com.treinarecife.DTO.CategoriaRequestDTO;
-import br.com.treinarecife.DTO.CategoriaResponseDTO;
 import br.com.treinarecife.acervo.literario.api.entity.Categoria;
+import br.com.treinarecife.dto.CategoriaRequestDTO;
+import br.com.treinarecife.dto.CategoriaResponseDTO;
 import br.com.treinarecife.service.CategoriaService;
 
 @RestController

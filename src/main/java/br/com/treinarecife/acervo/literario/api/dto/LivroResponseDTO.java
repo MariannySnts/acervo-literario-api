@@ -1,9 +1,10 @@
 
-package br.com.treinarecife.DTO;
+package br.com.treinarecife.acervo.literario.api.dto;
 
 import java.util.List;
 
-public record LivroRequestDTO(
+public record LivroResponseDTO(
+    Long id,
     String titulo,
     String isbn,
     Integer anoPublicacao,

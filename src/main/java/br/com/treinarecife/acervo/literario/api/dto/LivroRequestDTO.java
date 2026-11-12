@@ -1,10 +1,9 @@
 
-package br.com.treinarecife.DTO;
+package br.com.treinarecife.dto;
 
 import java.util.List;
 
-public record LivroResponseDTO(
-    Long id,
+public record LivroRequestDTO(
     String titulo,
     String isbn,
     Integer anoPublicacao,

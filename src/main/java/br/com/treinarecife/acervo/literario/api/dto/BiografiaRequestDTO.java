@@ -1,5 +1,5 @@
 
-package br.com.treinarecife.DTO;
+package br.com.treinarecife.dto;
 
 import java.time.LocalDate;
 
