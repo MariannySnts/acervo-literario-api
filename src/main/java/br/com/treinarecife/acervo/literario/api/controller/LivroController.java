@@ -1,4 +1,5 @@
 
+
 package br.com.treinarecife.acervo.literario.api.controller;
 
 import java.util.List;
@@ -9,13 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import br.com.treinarecife.acervo.literario.api.dto.LivroRequestDTO;
 import br.com.treinarecife.acervo.literario.api.dto.LivroResponseDTO;
-import br.com.treinarecife.acervo.literario.api.entity.Autor;
-import br.com.treinarecife.acervo.literario.api.entity.Categoria;
-import br.com.treinarecife.acervo.literario.api.entity.Livro;
 import br.com.treinarecife.acervo.literario.api.service.LivroService;
 
 @RestController
-@RequestMapping("/livros")
+@RequestMapping("/api/livros")
 public class LivroController {
 
     private final LivroService livroService;
@@ -26,117 +24,58 @@ public class LivroController {
 
     @GetMapping
     public ResponseEntity<List<LivroResponseDTO>> listarTodos() {
-        List<LivroResponseDTO> livros = livroService.listarTodos()
-                .stream()
-                .map(this::converterParaDTO)
-                .toList();
-
-        return ResponseEntity.ok(livros);
+        return ResponseEntity.ok(livroService.listarTodos());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<LivroResponseDTO> buscarPorId(
             @PathVariable Long id) {
 
-        Livro livro = livroService.buscarPorId(id);
+        return ResponseEntity.ok(livroService.buscarPorId(id));
+    }
 
-        return ResponseEntity.ok(converterParaDTO(livro));
+    @GetMapping("/categoria")
+    public ResponseEntity<List<LivroResponseDTO>> buscarPorCategoria(
+            @RequestParam String nome) {
+
+        return ResponseEntity.ok(
+            livroService.buscarPorCategoria(nome)
+        );
+    }
+
+    @GetMapping("/titulo")
+    public ResponseEntity<List<LivroResponseDTO>> buscarPorTitulo(
+            @RequestParam String termo) {
+
+        return ResponseEntity.ok(
+            livroService.buscarPorTitulo(termo)
+        );
     }
 
     @PostMapping
     public ResponseEntity<LivroResponseDTO> salvar(
-            @RequestBody LivroRequestDTO dados) {
+            @RequestBody LivroRequestDTO dto) {
 
-        Livro livro = converterParaEntidade(dados);
+        LivroResponseDTO livro = livroService.salvar(dto);
 
-        Livro salvo = livroService.salvar(livro);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(converterParaDTO(salvo));
+        return ResponseEntity.status(HttpStatus.CREATED).body(livro);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<LivroResponseDTO> atualizar(
             @PathVariable Long id,
-            @RequestBody LivroRequestDTO dados) {
+            @RequestBody LivroRequestDTO dto) {
 
-        Livro livro = converterParaEntidade(dados);
-
-        Livro atualizado = livroService.atualizar(id, livro);
-
-        return ResponseEntity.ok(converterParaDTO(atualizado));
+        return ResponseEntity.ok(
+            livroService.atualizar(id, dto)
+        );
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
+
         livroService.excluir(id);
+
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/buscar/categoria")
-    public ResponseEntity<List<LivroResponseDTO>> buscarPorCategoria(
-            @RequestParam String nome) {
-
-        List<LivroResponseDTO> livros =
-                livroService.buscarPorCategoria(nome)
-                .stream()
-                .map(this::converterParaDTO)
-                .toList();
-
-        return ResponseEntity.ok(livros);
-    }
-
-    @GetMapping("/buscar/titulo")
-    public ResponseEntity<List<LivroResponseDTO>> buscarPorTitulo(
-            @RequestParam String termo) {
-
-        List<LivroResponseDTO> livros =
-                livroService.buscarPorTitulo(termo)
-                .stream()
-                .map(this::converterParaDTO)
-                .toList();
-
-        return ResponseEntity.ok(livros);
-    }
-
-    private Livro converterParaEntidade(LivroRequestDTO dados) {
-        Livro livro = new Livro();
-
-        livro.setTitulo(dados.titulo());
-        livro.setIsbn(dados.isbn());
-        livro.setAnoPublicacao(dados.anoPublicacao());
-
-        Autor autor = new Autor();
-        autor.setId(dados.autorId());
-        livro.setAutor(autor);
-
-        List<Categoria> categorias = dados.categoriasIds()
-                .stream()
-                .map(id -> {
-                    Categoria categoria = new Categoria();
-                    categoria.setId(id);
-                    return categoria;
-                })
-                .toList();
-
-        livro.setCategorias(categorias);
-
-        return livro;
-    }
-
-    private LivroResponseDTO converterParaDTO(Livro livro) {
-        List<Long> categoriasIds = livro.getCategorias()
-                .stream()
-                .map(Categoria::getId)
-                .toList();
-
-        return new LivroResponseDTO(
-            livro.getId(),
-            livro.getTitulo(),
-            livro.getIsbn(),
-            livro.getAnoPublicacao(),
-            livro.getAutor().getId(),
-            categoriasIds
-        );
     }
 }

@@ -7,11 +7,11 @@ import br.com.treinarecife.acervo.literario.api.entity.Categoria;
 
 public class CategoriaMapper {
 
-    public static Categoria toEntity(CategoriaRequestDTO dto) {
+    public static Categoria toEntity(CategoriaRequestDTO categoriaDTO) {
 
         Categoria categoria = new Categoria();
 
-        categoria.setNome(dto.nome());
+        categoria.setNome(categoriaDTO.nome());
 
         return categoria;
     }
@@ -23,5 +23,6 @@ public class CategoriaMapper {
             categoria.getNome()
         );
     }
+
 
 }

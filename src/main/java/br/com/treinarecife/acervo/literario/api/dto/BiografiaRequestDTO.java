@@ -1,5 +1,5 @@
 
-package br.com.treinarecife.dto;
+package br.com.treinarecife.acervo.literario.api.dto;
 
 import java.time.LocalDate;
 

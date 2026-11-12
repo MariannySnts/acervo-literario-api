@@ -1,4 +1,5 @@
 
+
 package br.com.treinarecife.acervo.literario.api.controller;
 
 import java.util.List;
@@ -9,11 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import br.com.treinarecife.acervo.literario.api.dto.AutorRequestDTO;
 import br.com.treinarecife.acervo.literario.api.dto.AutorResponseDTO;
-import br.com.treinarecife.acervo.literario.api.entity.Autor;
 import br.com.treinarecife.acervo.literario.api.service.AutorService;
 
 @RestController
-@RequestMapping("/autores")
+@RequestMapping("/api/autores")
 public class AutorController {
 
     private final AutorService autorService;
@@ -24,62 +24,38 @@ public class AutorController {
 
     @GetMapping
     public ResponseEntity<List<AutorResponseDTO>> listarTodos() {
-        List<AutorResponseDTO> autores = autorService.listarTodos()
-                .stream()
-                .map(this::converterParaDTO)
-                .toList();
-
-        return ResponseEntity.ok(autores);
+        return ResponseEntity.ok(autorService.listarTodos());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AutorResponseDTO> buscarPorId(
             @PathVariable Long id) {
 
-        Autor autor = autorService.buscarPorId(id);
-
-        return ResponseEntity.ok(converterParaDTO(autor));
+        return ResponseEntity.ok(autorService.buscarPorId(id));
     }
 
     @PostMapping
     public ResponseEntity<AutorResponseDTO> salvar(
-            @RequestBody AutorRequestDTO dados) {
+            @RequestBody AutorRequestDTO dto) {
 
-        Autor autor = new Autor();
-        autor.setNome(dados.nome());
-        autor.setNacionalidade(dados.nacionalidade());
+        AutorResponseDTO autor = autorService.salvar(dto);
 
-        Autor salvo = autorService.salvar(autor);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(converterParaDTO(salvo));
+        return ResponseEntity.status(HttpStatus.CREATED).body(autor);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<AutorResponseDTO> atualizar(
             @PathVariable Long id,
-            @RequestBody AutorRequestDTO dados) {
+            @RequestBody AutorRequestDTO dto) {
 
-        Autor autor = new Autor();
-        autor.setNome(dados.nome());
-        autor.setNacionalidade(dados.nacionalidade());
-
-        Autor atualizado = autorService.atualizar(id, autor);
-
-        return ResponseEntity.ok(converterParaDTO(atualizado));
+        return ResponseEntity.ok(autorService.atualizar(id, dto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        autorService.excluir(id);
-        return ResponseEntity.noContent().build();
-    }
 
-    private AutorResponseDTO converterParaDTO(Autor autor) {
-        return new AutorResponseDTO(
-            autor.getId(),
-            autor.getNome(),
-            autor.getNacionalidade()
-        );
+        autorService.excluir(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

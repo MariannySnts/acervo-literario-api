@@ -1,5 +1,5 @@
 
-package br.com.treinarecife.controller;
+package br.com.treinarecife.acervo.literario.api.controller;
 
 import java.util.List;
 
@@ -7,10 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import br.com.treinarecife.acervo.literario.api.entity.Categoria;
-import br.com.treinarecife.dto.CategoriaRequestDTO;
-import br.com.treinarecife.dto.CategoriaResponseDTO;
-import br.com.treinarecife.service.CategoriaService;
+import br.com.treinarecife.acervo.literario.api.dto.CategoriaRequestDTO;
+import br.com.treinarecife.acervo.literario.api.dto.CategoriaResponseDTO;
+import br.com.treinarecife.acervo.literario.api.service.CategoriaService;
 
 @RestController
 @RequestMapping("/categorias")
@@ -24,35 +23,22 @@ public class CategoriaController {
 
     @GetMapping
     public ResponseEntity<List<CategoriaResponseDTO>> listarTodas() {
-        List<CategoriaResponseDTO> categorias =
-                categoriaService.listarTodas()
-                .stream()
-                .map(this::converterParaDTO)
-                .toList();
-
-        return ResponseEntity.ok(categorias);
+        return ResponseEntity.ok(categoriaService.listarTodas());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoriaResponseDTO> buscarPorId(
             @PathVariable Long id) {
 
-        Categoria categoria = categoriaService.buscarPorId(id);
-
-        return ResponseEntity.ok(converterParaDTO(categoria));
+        return ResponseEntity.ok(categoriaService.buscarPorId(id));
     }
 
     @PostMapping
     public ResponseEntity<CategoriaResponseDTO> salvar(
             @RequestBody CategoriaRequestDTO dados) {
 
-        Categoria categoria = new Categoria();
-        categoria.setNome(dados.nome());
-
-        Categoria salva = categoriaService.salvar(categoria);
-
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(converterParaDTO(salva));
+                .body(categoriaService.salvar(dados));
     }
 
     @PutMapping("/{id}")
@@ -60,13 +46,7 @@ public class CategoriaController {
             @PathVariable Long id,
             @RequestBody CategoriaRequestDTO dados) {
 
-        Categoria categoria = new Categoria();
-        categoria.setNome(dados.nome());
-
-        Categoria atualizada =
-                categoriaService.atualizar(id, categoria);
-
-        return ResponseEntity.ok(converterParaDTO(atualizada));
+        return ResponseEntity.ok(categoriaService.atualizar(id, dados));
     }
 
     @DeleteMapping("/{id}")
@@ -75,12 +55,5 @@ public class CategoriaController {
         return ResponseEntity.noContent().build();
     }
 
-    private CategoriaResponseDTO converterParaDTO(
-            Categoria categoria) {
 
-        return new CategoriaResponseDTO(
-            categoria.getId(),
-            categoria.getNome()
-        );
-    }
 }
